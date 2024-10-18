@@ -33,7 +33,7 @@ Then, the packet is sent via LoRa to other radios, which sets it as the RX chara
 
 Finally, all the other devices connected via Bluetooth will be notified of the state change on RX and, hence, receive the packet data.
 
-![Diagram showing radios sending packet to all connected phones](./media/sending_stap3.png?raw=true)
+![Diagram showing radios sending packet to all connected phones](./media/sending_step3.png?raw=true)
 
 And the message has been broadcast to everybody! Yippee!!!!
 
@@ -56,3 +56,54 @@ The data sent over LoRa will have 4 bytes of data appended to the front to ident
 | 4 bytes     | 0x8248 (hex) for identification |
 | 1-512 bytes | Packet Data (raw bytes)         |
 
+# Bluetooth LE UUIDs
+
+| Key               | UUID                                 | Allowed Operations |
+|-------------------|--------------------------------------|--------------------|
+| Primary Service   | 82480000-9a25-49fc-99be-2c16d1492d35 |                    |
+| TX Characteristic | 82480001-9a25-49fc-99be-2c16d1492d35 | Write              |
+| RX Characteristic | 82480002-9a25-49fc-99be-2c16d1492d35 | Notify             |
+
+# Example Client
+
+```js
+async function connect() {
+
+  const serviceUuid = parseInt('82480000-9a25-49fc-99be-2c16d1492d35');
+  const txCharacteristicUuid = parseInt('82480001-9a25-49fc-99be-2c16d1492d35');
+  const rxCharacteristicUuid = parseInt('82480002-9a25-49fc-99be-2c16d1492d35');
+
+  try {
+    console.log('Requesting Bluetooth Device...');
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [
+        {
+          services: [serviceUuid]
+        }
+      ]
+    });
+
+    console.log('Connecting to GATT Server...');
+    const server = await device.gatt.connect();
+
+    console.log('Getting Service...');
+    const service = await server.getPrimaryService(serviceUuid);
+
+    console.log('Getting Characteristics...');
+    const txCharacteristic = await service.getCharacteristic(txCharacteristicUuid);
+    const rxCharacteristic = await service.getCharacteristic(rxCharacteristicUuid);
+
+    console.log('Sending data...');
+    txCharacteristic.writeValue(new Uint8Array([0x01, 0x02, 0x03]));
+
+    console.log('Enabling RX notifications...');
+    rxCharacteristic.startNotifications();
+    rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+      const value = event.target.value;
+      console.log('Received:', value);
+    });
+  } catch(error) {
+    console.log('Uh oh... ' + error);
+  }
+}
+```
