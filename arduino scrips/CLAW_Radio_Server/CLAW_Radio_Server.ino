@@ -30,6 +30,7 @@ bool deviceConnected = false;
 bool oldDeviceConnected = false;
 uint32_t value = 0;
 String serverName;
+bool location;
 
 
 // TODO
@@ -51,7 +52,9 @@ String serverName;
 #define CHARACTERISTIC_RECIVE    "82480002-9a25-49fc-99be-2c16d1492d35"
 
 
+// Characteristic pointers
 BLECharacteristic *pCharacteristicTransmit;
+BLECharacteristic *pCharacteristicRecive;
 
 
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -70,8 +73,17 @@ class MyServerCallbacks: public BLEServerCallbacks {
 void setup() {
   Serial.begin(115200);
 
+  //debugging
+  location = true;
+
+  if (location) {
+    serverName = "CLAW Radio - Stands";
+  } else {
+    serverName ="CLAW Radio - Pit";
+  }
+
   // Create the BLE Device with name
-  BLEDevice::init("Chainlynx stands CLAW");
+  BLEDevice::init("serverName");
 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
@@ -82,6 +94,14 @@ void setup() {
 
   // Create a BLE Characteristic
   pCharacteristicTransmit = pService->createCharacteristic(
+                      CHARACTERISTIC_TRANSMIT,
+                      BLECharacteristic::PROPERTY_READ   |
+                      BLECharacteristic::PROPERTY_WRITE  |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+
+  pCharacteristicRecive = pService->createCharacteristic(
                       CHARACTERISTIC_TRANSMIT,
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
