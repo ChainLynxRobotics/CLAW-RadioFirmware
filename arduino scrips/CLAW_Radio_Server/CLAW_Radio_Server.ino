@@ -26,8 +26,6 @@
 
 BLEServer* pServer = NULL;
 BLECharacteristic* pCharacteristic = NULL;
-bool deviceConnected = false;
-bool oldDeviceConnected = false;
 uint32_t value = 0;
 String serverName;
 bool location;
@@ -59,12 +57,10 @@ BLECharacteristic *pCharacteristicRecive;
 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
-      deviceConnected = true;
       BLEDevice::startAdvertising();
     };
 
     void onDisconnect(BLEServer* pServer) {
-      deviceConnected = false;
     }
 };
 
@@ -83,7 +79,8 @@ void setup() {
   }
 
   // Create the BLE Device with name
-  BLEDevice::init("serverName");
+  // 
+  BLEDevice::init(serverName.c_str());
 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
@@ -102,7 +99,7 @@ void setup() {
                     );
 
   pCharacteristicRecive = pService->createCharacteristic(
-                      CHARACTERISTIC_TRANSMIT,
+                      CHARACTERISTIC_RECIVE,
                       BLECharacteristic::PROPERTY_READ   |
                       BLECharacteristic::PROPERTY_WRITE  |
                       BLECharacteristic::PROPERTY_NOTIFY |
@@ -111,7 +108,8 @@ void setup() {
 
   // https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.descriptor.gatt.client_characteristic_configuration.xml
   // Create a BLE Descriptor
-  pCharacteristic->addDescriptor(new BLE2902());
+  pCharacteristicTransmit->addDescriptor(new BLE2902());
+  pCharacteristicRecive->addDescriptor(new BLE2902());
 
   // Start the service
   pService->start();
@@ -126,23 +124,5 @@ void setup() {
 }
 
 void loop() {
-    // notify changed value
-    if (deviceConnected) {
-        pCharacteristic->setValue((uint8_t*)&value, 4);
-        pCharacteristic->notify();
-        value++;
-        delay(10); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
-    }
-    // disconnecting
-    if (!deviceConnected && oldDeviceConnected) {
-        delay(500); // give the bluetooth stack the chance to get things ready
-        pServer->startAdvertising(); // restart advertising
-        Serial.println("start advertising");
-        oldDeviceConnected = deviceConnected;
-    }
-    // connecting
-    if (deviceConnected && !oldDeviceConnected) {
-        // do stuff here on connecting
-        oldDeviceConnected = deviceConnected;
-    }
+
 }
