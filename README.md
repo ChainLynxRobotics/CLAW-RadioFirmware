@@ -39,13 +39,17 @@ And the message has been broadcast to everybody! Yippee!!!!
 
 # Packet Format
 
+Because messages of data can become quite large, messages are split into groups of packets that are all broadcasted. Each message or "group" will have its own unique ID, and each packet in the group includes the ID of the group it belongs to, the index of the packet (e.g. where it is in regards to the concatenated bytes of the final message), and the total amount of packets that belong in the group.
 The packet can be **any binary data** that the clients want to send to each other.
 
 #### Bluetooth LE Characteristic Value
 
 | Length      | Data                            |
 |-------------|---------------------------------|
-| 1-512 bytes | Packet Data (raw bytes)         |
+| 4 bytes     | Group ID (big-endian)           |
+| 1 byte      | Group Index                     |
+| 1 byte      | Group Total                     |
+| Remaining   | Data                            |
 
 #### LoRa Radio Packets
 
@@ -54,7 +58,10 @@ The data sent over LoRa will have 4 bytes of data appended to the front to ident
 | Length      | Data                            |
 |-------------|---------------------------------|
 | 4 bytes     | 0x8248 (hex) for identification |
-| 1-512 bytes | Packet Data (raw bytes)         |
+| 4 bytes     | Group ID (big-endian)           |
+| 1 byte      | Group Index                     |
+| 1 byte      | Group Total                     |
+| Remaining   | Data                            |
 
 # Bluetooth LE UUIDs
 
