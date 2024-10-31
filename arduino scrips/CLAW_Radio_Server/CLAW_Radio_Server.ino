@@ -43,7 +43,28 @@
 #error "LoRa example is only allowed to run SX1276/78. For other RF models, please run examples/RadioLibExamples
 #endif
 
+//OLED Display Setup
 
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+String amount_of_devices_connected = "0 Devices Connected";
+String current_progress = "Waiting for data...";
+String error_message = "No errors";
+
+//SD Card Setup
+
+#include <SPI.h>
+#include <SD.h>
+
+const int chipSelect = 13; // Pin for SD card
 
 
 BLEServer* pServer = NULL;
@@ -146,6 +167,28 @@ void setup() {
 
   setup_LoRa();
 
+
+  //OLED Display Setup
+
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+  }
+  display.clearDisplay();
+  display.display();
+
+  updateDisplay();
+
+  //SD Card Setup
+
+  if (!SD.begin(chipSelect)) {
+    Serial.println("SD card initialization failed!");
+    error_message = "SD card initialization failed!";
+    updateDisplay();
+    return;
+  }
+  Serial.println("SD card initialized");
+
 }
 
 void loop() {
@@ -197,6 +240,8 @@ void setup_LoRa() {
     LoRa.setPins(RADIO_CS_PIN, RADIO_RST_PIN, RADIO_DIO0_PIN);
     if (!LoRa.begin(CONFIG_RADIO_FREQ * 1000000)) {
         Serial.println("Starting LoRa failed!");
+	error_message = "Starting LoRa failed!";
+	updateDisplay();
         while (1);
     }
 
@@ -226,3 +271,37 @@ void transmit_data_via_LoRa(String data) {
     LoRa.print(data);
     LoRa.endPacket();
 }
+
+void updateDisplay() {
+  display.clearDisplay();
+
+  display.setTextSize(1);      
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setCursor(0, 0);
+  display.println(serverName);
+
+  display.setCursor(0, 10);
+  display.println(amount_of_devices_connected);
+
+  display.setCursor(0, 20);
+  display.println(current_progress);
+
+  display.setCursor(0, 30);
+  display.println(error_message);
+
+  display.display();
+}
+
+void save_data_to_SD(String data) {
+  File dataFile = SD.open("transmissions.txt", FILE_WRITE);
+  if (dataFile) {
+    dataFile.println(data);
+    dataFile.close();
+  } else {
+    Serial.println("Failed to open transmission.txt for writing.");
+    error_message = "Failed to open transmission.txt for writing.";
+    updateDisplay();
+  }  
+}
+
