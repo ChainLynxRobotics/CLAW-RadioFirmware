@@ -27,7 +27,7 @@
 //LoRa Setup
 
 #include <LoRa.h>
-#include "LoRaBoards.h"
+#include <LoRaBoards.h>
 
 #ifndef CONFIG_RADIO_FREQ
 #define CONFIG_RADIO_FREQ           868.0
