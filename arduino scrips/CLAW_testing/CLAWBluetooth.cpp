@@ -6,11 +6,6 @@
 #define CHARACTERISTIC_TRANSMIT  "82480001-9a25-49fc-99be-2c16d1492d35"
 #define CHARACTERISTIC_RECIVE    "82480002-9a25-49fc-99be-2c16d1492d35"
 
-//BLEServer* pServer = NULL;
-//BLECharacteristic* pCharacteristic = NULL;
-//u_int32_t value = 0;
-//int deviceConnected = 0;
-
 CLAWBluetooth::CLAWBluetooth()
 {
     
@@ -80,7 +75,6 @@ int CLAWBluetooth::getDevices() {
 }
 
 MyServerCallbacks::MyServerCallbacks(CLAWBluetooth* _BT) {
-
   BT = _BT;
 }
 
@@ -96,7 +90,6 @@ void MyServerCallbacks::onDisconnect(BLEServer* pServer) {
 }
 
 CharacteristicChangeCallbacks::CharacteristicChangeCallbacks(CLAWBluetooth* _BT) {
-
   BT = _BT;
 }
 
@@ -104,8 +97,8 @@ CharacteristicChangeCallbacks::CharacteristicChangeCallbacks(CLAWBluetooth* _BT)
 void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) {
 
     // Get the key value pair, the key is one of the characteristic UUIDs defined earlier
-    String/*std::string*/ key = pCharacteristic->getUUID().toString();
-    String/*std::string*/ value = pCharacteristic->getValue();
+    String key = pCharacteristic->getUUID().toString();
+    String value = pCharacteristic->getValue();
     Serial.println("characteristic changed");
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();

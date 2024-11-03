@@ -20,7 +20,7 @@ class CLAWBluetooth
         int getDevices();
         
         int deviceConnected = 0;
-        String status = "some important message here";
+        String status = "[Status message]";
         
         BLECharacteristic *pCharacteristicTransmit;
         BLECharacteristic *pCharacteristicRecive;

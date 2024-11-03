@@ -1,16 +1,17 @@
-#include "Arduino.h"
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <SSD1306Ascii.h>
+#include <SSD1306AsciiSoftSpi.h>
+#include <SSD1306AsciiSpi.h>
+#include <SSD1306AsciiWire.h>
+#include <SSD1306init.h>
 
-class CLAWOled {
+#include "Arduino.h"
+
+class CLAWOled: public SSD1306AsciiWire{
 
     private:
-
 
     public:
 
         CLAWOled();
-        void begin();
-        void updateDisplay();
-}
+        void updateDisplay(String name, int devices, String status);
+};
