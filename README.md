@@ -23,15 +23,15 @@ Bluetooth is used for short range communication between phones and radios, while
 
 ## How a message is sent
 
-A Bluetooth-connected phone sets the TX characteristic as the value of its packet.
+A Bluetooth-connected phone sets the RX characteristic as the value of its packet.
 
 ![Diagram showing an arrow from a phone to a radio](./media/sending_step1.png?raw=true)
 
-Then, the packet is sent via LoRa to other radios, which sets it as the RX characteristic (this also needs to be done for the device sending it.)
+Then, the packet is sent via LoRa to other radios, which sets it as the TX characteristic (this also needs to be done for the device sending it.)
 
 ![Diagram showing radio sending packet to other radio](./media/sending_step2.png?raw=true)
 
-Finally, all the other devices connected via Bluetooth will be notified of the state change on RX and, hence, receive the packet data.
+Finally, all the other devices connected via Bluetooth will be notified of the state change on TX and, hence, receive the packet data.
 
 ![Diagram showing radios sending packet to all connected phones](./media/sending_step3.png?raw=true)
 
@@ -68,8 +68,8 @@ The data sent over LoRa will have 4 bytes of data appended to the front to ident
 | Key               | UUID                                 | Allowed Operations |
 |-------------------|--------------------------------------|--------------------|
 | Primary Service   | 82480000-9a25-49fc-99be-2c16d1492d35 |                    |
-| TX Characteristic | 82480001-9a25-49fc-99be-2c16d1492d35 | Write              |
-| RX Characteristic | 82480002-9a25-49fc-99be-2c16d1492d35 | Notify             |
+| TX Characteristic | 82480001-9a25-49fc-99be-2c16d1492d35 | Notify             |
+| RX Characteristic | 82480002-9a25-49fc-99be-2c16d1492d35 | Write              |
 
 # Example Client
 
@@ -101,11 +101,11 @@ async function connect() {
     const rxCharacteristic = await service.getCharacteristic(rxCharacteristicUuid);
 
     console.log('Sending data...');
-    txCharacteristic.writeValue(new Uint8Array([0x01, 0x02, 0x03]));
+    rxCharacteristic.writeValue(new Uint8Array([0x01, 0x02, 0x03]));
 
     console.log('Enabling RX notifications...');
-    rxCharacteristic.startNotifications();
-    rxCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
+    txCharacteristic.startNotifications();
+    txCharacteristic.addEventListener('characteristicvaluechanged', (event) => {
       const value = event.target.value;
       console.log('Received:', value);
     });
