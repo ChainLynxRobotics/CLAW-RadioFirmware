@@ -68,7 +68,7 @@ void CLAWBluetooth::begin() {
 BLECharacteristic *pCharacteristicTransmit;
 BLECharacteristic *pCharacteristicRecive;
 
-String CLAWBluetooth::serverName() {
+String CLAWBluetooth::getName() {
     //implement hardware differentiation code
     //Claw Radio - Stands / Pit
     return "CLAW Radio - Stands";
@@ -110,18 +110,18 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
     BT->pCharacteristicTransmit->notify();
 
     // Debug messages
-    if (value.length() > 0) {
-    Serial.println("*********");
+    // if (value.length() > 0) {
+    // Serial.println("*********");
 
-    Serial.print("Key:   ");
-    for (int i = 0; i < key.length(); i++) Serial.print(key[i]);
-    Serial.println();
+    // Serial.print("Key:   ");
+    // for (int i = 0; i < key.length(); i++) Serial.print(key[i]);
+    // Serial.println();
 
-    Serial.print("Value: ");
-    for (int i = 0; i < value.length(); i++) Serial.print(value[i]);
-    Serial.println();
+    // Serial.print("Value: ");
+    // for (int i = 0; i < value.length(); i++) Serial.print(value[i]);
+    // Serial.println();
 
-    Serial.println("*********");
-    }
+    // Serial.println("*********");
+    // }
 };
 

@@ -1,5 +1,3 @@
-
-
 #include "Arduino.h"
 #include <BLEDevice.h>
 #include <BLEServer.h>
@@ -14,49 +12,43 @@ class CLAWBluetooth
         BLECharacteristic* pCharacteristic;
         u_int32_t value;
         
-
-        
-
     public:
 
         CLAWBluetooth();
         void begin();
-        String serverName();
+        String getName();
         int getDevices();
         
         int deviceConnected = 0;
+        String status = "some important message here";
         
         BLECharacteristic *pCharacteristicTransmit;
         BLECharacteristic *pCharacteristicRecive;
-        //void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic);
-
 };
 
 class CharacteristicChangeCallbacks: public BLECharacteristicCallbacks
 {
-    public:
-
-        void onWrite(BLECharacteristic *pCharacteristic);
-        CharacteristicChangeCallbacks(CLAWBluetooth* _BT);
-
     private:
 
         CLAWBluetooth* BT;
 
+    public:
 
+        void onWrite(BLECharacteristic *pCharacteristic);
+        CharacteristicChangeCallbacks(CLAWBluetooth* _BT);
 };
 
 
 class MyServerCallbacks: public BLEServerCallbacks
 {
+    private: 
+    
+        CLAWBluetooth* BT;
+
     public:
 
         MyServerCallbacks(CLAWBluetooth* _BT);
         void onConnect(BLEServer* pServer);
         void onDisconnect(BLEServer* pServer);
-
-    private: 
-    
-        CLAWBluetooth* BT;
 };
 

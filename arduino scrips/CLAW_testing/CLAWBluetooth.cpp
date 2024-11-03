@@ -1,3 +1,4 @@
+#include "WString.h"
 #include "CLAWBluetooth.h"
 
 #define SERVICE_UUID             "82480000-9a25-49fc-99be-2c16d1492d35"
@@ -16,7 +17,7 @@ CLAWBluetooth::CLAWBluetooth()
 }
 
 void CLAWBluetooth::begin() {
-    BLEDevice::init(serverName().c_str());
+    BLEDevice::init(getName().c_str());
 
     // Create the BLE Server
     pServer = BLEDevice::createServer();
@@ -68,7 +69,7 @@ void CLAWBluetooth::begin() {
 BLECharacteristic *pCharacteristicTransmit;
 BLECharacteristic *pCharacteristicRecive;
 
-String CLAWBluetooth::serverName() {
+String CLAWBluetooth::getName() {
     //implement hardware differentiation code
     //Claw Radio - Stands / Pit
     return "CLAW Radio - Stands";
@@ -103,25 +104,25 @@ CharacteristicChangeCallbacks::CharacteristicChangeCallbacks(CLAWBluetooth* _BT)
 void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) {
 
     // Get the key value pair, the key is one of the characteristic UUIDs defined earlier
-    std::string key = pCharacteristic->getUUID().toString();
-    std::string value = pCharacteristic->getValue();
+    String/*std::string*/ key = pCharacteristic->getUUID().toString();
+    String/*std::string*/ value = pCharacteristic->getValue();
     Serial.println("characteristic changed");
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
 
     // Debug messages
-    if (value.length() > 0) {
-    Serial.println("*********");
+    // if (value.length() > 0) {
+    // Serial.println("*********");
 
-    Serial.print("Key:   ");
-    for (int i = 0; i < key.length(); i++) Serial.print(key[i]);
-    Serial.println();
+    // Serial.print("Key:   ");
+    // for (int i = 0; i < key.length(); i++) Serial.print(key[i]);
+    // Serial.println();
 
-    Serial.print("Value: ");
-    for (int i = 0; i < value.length(); i++) Serial.print(value[i]);
-    Serial.println();
+    // Serial.print("Value: ");
+    // for (int i = 0; i < value.length(); i++) Serial.print(value[i]);
+    // Serial.println();
 
-    Serial.println("*********");
-    }
+    // Serial.println("*********");
+    // }
 };
 
