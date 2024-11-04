@@ -1,0 +1,7 @@
+TODO
+-C++ for LoRa
+-C++ for SD
+-hardware differentiation for each radio
+-better documentation for bluetooth and oled
+-implement status messages for bluetooth
+-LoRa connection confirmation
