@@ -1,7 +1,15 @@
-TODO
+-TODO-
+
+Software
 -C++ for LoRa
 -C++ for SD
+-better oled display (not entirely sure what this means)
 -hardware differentiation for each radio
 -better documentation for bluetooth and oled
 -implement status messages for bluetooth
--LoRa connection confirmation
+-LoRa connection confirmation (might require multithreading)
+-display LoRa connection status on oled
+
+Physical stuff
+-get mechanics member to CAD enclosure
+-buy/donate lilygo modules

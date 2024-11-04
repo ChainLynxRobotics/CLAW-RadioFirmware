@@ -1,11 +1,10 @@
 #include "CLAWOled.h"
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-
 CLAWOled::CLAWOled() {
     
 }
+
+// pass paremeters from CLAWBT to display on oled screen
 
 void CLAWOled::updateDisplay(String name, int devices, String status) {
 

@@ -4,6 +4,8 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
+// remember to put all global variables and funtions in its .h file !
+
 class CLAWBluetooth
 {
     private:
@@ -20,8 +22,12 @@ class CLAWBluetooth
         int getDevices();
         
         int deviceConnected = 0;
-        String status = "[Status message]";
+        String status = "[Status message]"; // placeholder status messege
         
+        // object pointers are defined with an asterisk (*) by [type] *[name]
+        // to access variables or call functions, you need to use a pointer
+        // [class]->[function/variable] as opposed to [class].[function/variable]
+
         BLECharacteristic *pCharacteristicTransmit;
         BLECharacteristic *pCharacteristicRecive;
 };
@@ -30,12 +36,15 @@ class CharacteristicChangeCallbacks: public BLECharacteristicCallbacks
 {
     private:
 
-        CLAWBluetooth* BT;
+        // refrence to CLAWBT so it can manipulate variables 
+        CLAWBluetooth* BT; 
 
     public:
 
-        void onWrite(BLECharacteristic *pCharacteristic);
-        CharacteristicChangeCallbacks(CLAWBluetooth* _BT);
+        // pass CLAWBT as a parameter on contruction so it can access CLAWBT variables
+        CharacteristicChangeCallbacks(CLAWBluetooth* _BT); 
+
+        void onWrite(BLECharacteristic *pCharacteristic); 
 };
 
 
@@ -43,11 +52,14 @@ class MyServerCallbacks: public BLEServerCallbacks
 {
     private: 
     
+        // refrence to CLAWBT so it can manipulate variables 
         CLAWBluetooth* BT;
 
     public:
 
-        MyServerCallbacks(CLAWBluetooth* _BT);
+        // pass CLAWBT as a parameter on contruction so it can access CLAWBT variables
+        MyServerCallbacks(CLAWBluetooth* _BT); 
+        
         void onConnect(BLEServer* pServer);
         void onDisconnect(BLEServer* pServer);
 };
