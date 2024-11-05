@@ -8,6 +8,6 @@ CLAWSD::CLAWSD() {
 
 bool saveData(String data) {
 
-    //return bool to confirm data was saved
+    // return bool to confirm data was saved 
     return true;
 }
