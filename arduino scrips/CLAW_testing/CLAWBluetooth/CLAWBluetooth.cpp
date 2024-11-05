@@ -8,11 +8,13 @@
 
 CLAWBluetooth::CLAWBluetooth()
 {
-    
+    // i dont think any code is needed in the constructor methood
 }
 
 void CLAWBluetooth::begin() {
-    BLEDevice::init(getName().c_str());
+    // initialize Bluetooth device with name returned from setName();
+    // BLE sometimes uses weird string types, sometimes you may need to pass [String].c_str()
+    BLEDevice::init(setName().c_str());
 
     // Create the BLE Server
     pServer = BLEDevice::createServer();
@@ -64,10 +66,18 @@ void CLAWBluetooth::begin() {
 BLECharacteristic *pCharacteristicTransmit;
 BLECharacteristic *pCharacteristicRecive;
 
-String CLAWBluetooth::getName() {
-    //implement hardware differentiation code
+// setName is called on start and checks if pin [probably gpio 46] is connected to 3.3v or ground via 1k resistor
+// 3.3v - Stands
+// GND - Pit
+String CLAWBluetooth::setName() {
+    //implement hardware differentiation code here
     //Claw Radio - Stands / Pit
-    return "CLAW Radio - Stands";
+    deviceName = "CLAW Radio - Stands";
+    return deviceName;
+}
+
+String CLAWBluetooth::getName() {
+    return deviceName;
 }
 
 int CLAWBluetooth::getDevices() {
@@ -84,6 +94,8 @@ void MyServerCallbacks::onConnect(BLEServer* pServer) {
     BT->deviceConnected++;
 };
 
+// keeping track of the amount of connected devices ^ v
+
 void MyServerCallbacks::onDisconnect(BLEServer* pServer) {
     Serial.println("device disconnected");
     BT->deviceConnected--;
@@ -99,7 +111,11 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
     // Get the key value pair, the key is one of the characteristic UUIDs defined earlier
     String key = pCharacteristic->getUUID().toString();
     String value = pCharacteristic->getValue();
+
+    // print in serial for debugging
     Serial.println("characteristic changed");
+
+    // set TX to RX value, then notify TX has been changed
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
 

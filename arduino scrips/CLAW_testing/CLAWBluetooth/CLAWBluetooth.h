@@ -18,10 +18,12 @@ class CLAWBluetooth
 
         CLAWBluetooth();
         void begin();
+        String setName();
         String getName();
         int getDevices();
         
         int deviceConnected = 0;
+        String deviceName;
         String status = "[Status message]"; // placeholder status messege
         
         // object pointers are defined with an asterisk (*) by [type] *[name]
@@ -59,7 +61,7 @@ class MyServerCallbacks: public BLEServerCallbacks
 
         // pass CLAWBT as a parameter on contruction so it can access CLAWBT variables
         MyServerCallbacks(CLAWBluetooth* _BT); 
-        
+
         void onConnect(BLEServer* pServer);
         void onDisconnect(BLEServer* pServer);
 };
