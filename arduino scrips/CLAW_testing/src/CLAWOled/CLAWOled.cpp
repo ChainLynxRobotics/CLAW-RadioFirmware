@@ -5,7 +5,7 @@ CLAWOled::CLAWOled() {
 }
 
 // passing parameters from CLAWBT to display on oled screen
-void CLAWOled::updateDisplay(String name, int devices, String status) {
+void CLAWOled::updateDisplay(String name, int devices, String BTStatus, String LoRaStatus) {
 
     clear();
 
@@ -16,5 +16,8 @@ void CLAWOled::updateDisplay(String name, int devices, String status) {
     println(devices);
     println();
     
-    println(status);
+    println(BTStatus);
+    println();
+
+    println(LoRaStatus);
 }

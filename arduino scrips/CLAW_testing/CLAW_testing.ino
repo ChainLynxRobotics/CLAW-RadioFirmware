@@ -1,5 +1,5 @@
-#include "CLAWBluetooth.h"
-#include "CLAWOled.h"
+#include "src/CLAWBluetooth/CLAWBluetooth.h"
+#include "src/CLAWOled/CLAWOled.h"
 
 CLAWBluetooth BT;
 CLAWOled oled;
@@ -23,7 +23,7 @@ void loop() {
   
   // put your main code here, to run repeatedly:
   Serial.println(BT.getDevices());
-  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.status);
+  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.status, /*placeholder message -> */ "[LoRa connection status]");
   // display updates every 2.5 seconds
   delay(2500);
 

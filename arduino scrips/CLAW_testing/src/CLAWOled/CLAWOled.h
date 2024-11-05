@@ -17,5 +17,5 @@ class CLAWOled: public SSD1306AsciiWire{
     public:
 
         CLAWOled();
-        void updateDisplay(String name, int devices, String status);
+        void updateDisplay(String name, int devices, String BTStatus, String LoRaStatus);
 };

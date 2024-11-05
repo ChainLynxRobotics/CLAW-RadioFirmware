@@ -11,8 +11,8 @@ class CLAWBluetooth
     private:
         
         BLEServer* pServer;
-        BLECharacteristic* pCharacteristic;
-        u_int32_t value;
+        // BLECharacteristic* pCharacteristic;
+        // u_int32_t value;
         
     public:
 
