@@ -9,6 +9,9 @@ Software
 -implement status messages for bluetooth
 -LoRa connection confirmation (might require multithreading)
 -display LoRa connection status on oled
+-find some way to include battery percent?
+-set up password for bluetooth connection
+-switch oled library to the adafruit one
 
 Physical stuff
 -get mechanics member to CAD enclosure

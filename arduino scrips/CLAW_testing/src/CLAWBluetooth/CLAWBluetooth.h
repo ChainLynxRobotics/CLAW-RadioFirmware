@@ -11,23 +11,25 @@ class CLAWBluetooth
     private:
         
         BLEServer* pServer;
-        // BLECharacteristic* pCharacteristic;
-        // u_int32_t value;
+        String setName();
         
     public:
 
         CLAWBluetooth();
         void begin();
-        String setName();
+        
         String getName();
+        void setStatus(String newStatus);
+        String getStatus();
         int getDevices();
+        String getData();
         
         int deviceConnected = 0;
         String deviceName;
-        String status = "[Status message]"; // placeholder status messege
+        String status = "[Bluetooth status]"; // placeholder status messege
         
         // object pointers are defined with an asterisk (*) by [type] *[name]
-        // to access variables or call functions, you need to use a pointer
+        // to access variables or call functions of object pointers, you need to use a pointer
         // [class]->[function/variable] as opposed to [class].[function/variable]
 
         BLECharacteristic *pCharacteristicTransmit;

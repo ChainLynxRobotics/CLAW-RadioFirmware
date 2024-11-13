@@ -1,8 +1,11 @@
 #include "WString.h"
 #include "CLAWBluetooth.h"
 
+// UUID for the CLAW radio
 #define SERVICE_UUID             "82480000-9a25-49fc-99be-2c16d1492d35"
 
+// UUIDs for the characteristics we use
+//       1 -> TX      2 -> RX
 #define CHARACTERISTIC_TRANSMIT  "82480001-9a25-49fc-99be-2c16d1492d35"
 #define CHARACTERISTIC_RECIVE    "82480002-9a25-49fc-99be-2c16d1492d35"
 
@@ -60,6 +63,7 @@ void CLAWBluetooth::begin() {
     pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
     BLEDevice::startAdvertising();
     Serial.println("Waiting a client connection to notify...");
+    status = "Waiting for data";
 }
 
 // Characteristic pointers
@@ -67,8 +71,8 @@ BLECharacteristic *pCharacteristicTransmit;
 BLECharacteristic *pCharacteristicRecive;
 
 // setName is called on start and checks if pin [probably gpio 46] is connected to 3.3v or ground via 1k resistor
-// 3.3v - Stands
-// GND - Pit
+//       3.3v - Stands
+//       GND - Pit
 String CLAWBluetooth::setName() {
     //implement hardware differentiation code here
     //Claw Radio - Stands / Pit
@@ -80,8 +84,21 @@ String CLAWBluetooth::getName() {
     return deviceName;
 }
 
+void CLAWBluetooth::setStatus(String newStatus) {
+    status = newStatus;
+}
+
+
+String CLAWBluetooth::getStatus() {
+    return status;
+}
+
 int CLAWBluetooth::getDevices() {
     return deviceConnected;
+}
+
+String CLAWBluetooth::getData() {
+    return pCharacteristicTransmit->getValue();
 }
 
 MyServerCallbacks::MyServerCallbacks(CLAWBluetooth* _BT) {
@@ -105,19 +122,19 @@ CharacteristicChangeCallbacks::CharacteristicChangeCallbacks(CLAWBluetooth* _BT)
   BT = _BT;
 }
 
-
 void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) {
 
     // Get the key value pair, the key is one of the characteristic UUIDs defined earlier
     String key = pCharacteristic->getUUID().toString();
     String value = pCharacteristic->getValue();
 
-    // print in serial for debugging
+    // print to serial for debugging
     Serial.println("characteristic changed");
 
     // set TX to RX value, then notify TX has been changed
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
+    BT->setStatus("New Data Recived");
 
     // Debug messages
     // if (value.length() > 0) {

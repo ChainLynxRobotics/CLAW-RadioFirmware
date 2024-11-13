@@ -3,7 +3,11 @@
 #define CS 13
 
 CLAWSD::CLAWSD() {
-    //this()
+    
+}
+
+void CLAWSD::begin(int cs) {
+    //SD.begin(cs);
 }
 
 bool saveData(String data) {
