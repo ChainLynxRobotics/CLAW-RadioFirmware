@@ -20,9 +20,9 @@ void setup() {
   oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   oled.setTextColor(WHITE);
 
+  // reccomend starting oled display as the last thing in setup
+  // has a 4 second display to show logo and team number because silly :3
   oled.startDisplay();
-
-  delay(200);
 }
 
 void loop() {
@@ -37,8 +37,8 @@ void loop() {
   //   Serial.println("something went wrong");
   // }
 
-  // display updates every 2.5 seconds
-  delay(2500);
+  // refresh every half second
+  delay(500);
 
 }
 

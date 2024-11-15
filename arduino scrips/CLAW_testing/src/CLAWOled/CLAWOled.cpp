@@ -8,6 +8,16 @@ void CLAWOled::startDisplay() {
 
     display();
     clearDisplay();
+    delay(10);
+
+    drawBitmap(32, 0, bmp_chainlynx_logo_small, 128, 64, WHITE);
+    display();
+    delay(2000);
+
+    clearDisplay();
+    drawBitmap(0, 0, bmp_8248_logo, 128, 64, WHITE);
+    display();
+    delay(2000);
 
 }
 
@@ -26,11 +36,59 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     println(devices);
     println();
     
-    // status of bluetooth (under development)
-    println(BTStatus);
-    println();
+    // display Bluetooth status 
+    switch (BTStatus) {
 
-    // status of LoRa communication (under development)
-    println(LoRaStatus);
+        case 0:
+            drawBitmap(0, 48, bmp_bluetooth_disconnected, 128, 64, WHITE);
+            break;
+        
+        case 1:
+            drawBitmap(0, 48, bmp_bluetooth_connected, 128, 64, WHITE);
+            break;
+
+        default:
+            drawError(0, 48);
+            break;
+    }
+
+    // display SD status
+    switch (SDStatus)
+    {
+
+    case 0:
+        drawBitmap(17, 48, bmp_sd_disconnected, 128, 64, WHITE);
+        break;
+    
+    case 1:
+        drawBitmap(17, 48, bmp_sd_connected, 128, 64, WHITE);
+        break;
+
+    default:
+        drawError(17, 48);
+        break;
+    }
+
+    // display LoRa status
+    switch (LoRaStatus)
+    {
+
+    case 0:
+        drawBitmap(33, 48, bmp_LoRa_disconnected, 128, 64, WHITE);
+        break;
+    
+    case 1:
+        drawBitmap(33, 48, bmp_LoRa_connected, 128, 64, WHITE);
+        break;
+
+    default:
+        drawError(33, 48);
+        break;
+    }
+
     display();
+}
+
+CLAWOled::drawError(int x, int y) {
+    drawBitmap(x, y, bmp_error, 128, 64, WHITE);
 }
