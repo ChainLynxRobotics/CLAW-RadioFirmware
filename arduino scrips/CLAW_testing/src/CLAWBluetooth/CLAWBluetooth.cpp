@@ -63,7 +63,6 @@ void CLAWBluetooth::begin() {
     pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
     BLEDevice::startAdvertising();
     Serial.println("Waiting a client connection to notify...");
-    status = "Waiting for data";
 }
 
 // Characteristic pointers
@@ -84,12 +83,12 @@ String CLAWBluetooth::getName() {
     return deviceName;
 }
 
-void CLAWBluetooth::setStatus(String newStatus) {
+void CLAWBluetooth::setStatus(int newStatus) {
     status = newStatus;
 }
 
 
-String CLAWBluetooth::getStatus() {
+int CLAWBluetooth::getStatus() {
     return status;
 }
 
@@ -134,7 +133,6 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
     // set TX to RX value, then notify TX has been changed
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
-    BT->setStatus("New Data Recived");
 
     // Debug messages
     // if (value.length() > 0) {

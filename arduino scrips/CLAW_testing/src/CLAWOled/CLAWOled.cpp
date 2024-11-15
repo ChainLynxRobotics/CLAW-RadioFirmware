@@ -12,7 +12,7 @@ void CLAWOled::startDisplay() {
 }
 
 // passing parameters from CLAWBT to display on oled screen
-void CLAWOled::updateDisplay(String name, int devices, String BTStatus, String LoRaStatus) {
+void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus) {
 
     // clear everything previously displayed and set cursor to 0,0
     clearDisplay();

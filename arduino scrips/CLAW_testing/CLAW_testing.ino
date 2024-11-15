@@ -4,7 +4,7 @@
 
 CLAWBluetooth BT;
 CLAWOled oled;
-CLAWSD SD;
+CLAWSD CSD;
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,11 +12,11 @@ void setup() {
   // serial for debugging
   Serial.begin(9600);
 
-  // begining bluetooth and SD card, SD uses pin [4] for SPI chip select
+  // begining bluetooth and SD card
   BT.begin();
-  SD.begin(4);
+  CSD.begin();
 
-  // begin oled with type of oled module (128x64), and its I2C address (0x3C)
+  // begin oled with type of oled module (SSD1306), and its I2C address (0x3C)
   oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   oled.setTextColor(WHITE);
 
@@ -29,13 +29,13 @@ void loop() {
   
   // put your main code here, to run repeatedly:
   Serial.println(BT.getDevices());
-  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), /*placeholder message -> */ "[LoRa status]");
+  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), CSD.getStatus(), 0);
 
-  if (SD.saveData(BT.getData)) {
-    Serial.println("data saved");
-  } else {
-    Serial.println("something went wrong");
-  }
+  // if (SD.saveData(BT.getData)) {
+  //   Serial.println("data saved");
+  // } else {
+  //   Serial.println("something went wrong");
+  // }
 
   // display updates every 2.5 seconds
   delay(2500);
