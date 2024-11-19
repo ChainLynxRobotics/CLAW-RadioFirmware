@@ -10,17 +10,17 @@
 
 // using SDO (Serial Data Out) and SDI (Serial Data In) instead of previous SPI terms
 //  MISO and MOSI are outdated and have bad historical connotations
-#define SCK 18
-#define SDI 19
-#define SDO 23
-#define CS 5
+#define SCK 14
+#define SDI 12
+#define SDO 13
+#define CS 14
 // actual lilygo pins are CS 13, SDO 11, SCK 14, SDI 2
 
 class CLAWSD {
 
     private:
 
-    SPIClass spi = SPIClass(VSPI);
+    SPIClass spi = SPIClass(HSPI);
     int status = 0;
 
     public:

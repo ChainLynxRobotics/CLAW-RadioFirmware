@@ -5,6 +5,7 @@
 CLAWBluetooth BT;
 CLAWOled oled;
 CLAWSD CSD;
+// CLAWSD class is defined as CSD because there is an inter refrece to another class called "SD"
 
 void setup() {
   // put your setup code here, to run once:

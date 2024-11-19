@@ -12,7 +12,7 @@ class CLAWBluetooth
         
         BLEServer* pServer;
         String setName();
-        String deviceName;
+        String deviceName = "CLAW Radio - ";
         int status = 0; // 0 default
         
     public:
