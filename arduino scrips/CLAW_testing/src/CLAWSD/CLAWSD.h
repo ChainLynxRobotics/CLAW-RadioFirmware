@@ -21,7 +21,7 @@ class CLAWSD {
     private:
 
     SPIClass spi = SPIClass(HSPI);
-    int status = 0;
+    int status = 1;
 
     public:
 

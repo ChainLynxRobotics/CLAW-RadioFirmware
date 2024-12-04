@@ -13,9 +13,9 @@ void CLAWOled::startDisplay() {
     clearDisplay();
     delay(10);
 
-    drawBitmap(32, 0, bmp_chainlynx_logo_small, 64, 64, WHITE);
-    display();
-    delay(3000);
+    // drawBitmap(32, 0, bmp_chainlynx_logo_small, 64, 64, WHITE);
+    // display();
+    // delay(3000);
 
     clearDisplay();
     drawBitmap(0, 0, bmp_8248_logo, 128, 64, WHITE);

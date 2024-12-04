@@ -64,6 +64,7 @@ void CLAWBluetooth::begin() {
     pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
     BLEDevice::startAdvertising();
     Serial.println("Waiting a client connection to notify...");
+    Serial.println(getName());
     setStatus(1);
 }
 
@@ -80,19 +81,19 @@ String CLAWBluetooth::setName() {
     // switch (digitalRead(46))
     // {
     // case HIGH:
-    //     deviceName + "Stands";
+    //     deviceName += "Stands";
     //     break;
     
     // case LOW:
-    //     deviceName + "Pit";
+    //     deviceName += "Pit";
     //     break;
 
     // default:
-    //     deviceName + "Test";
+    //     deviceName += "Test";
     // }
-    deviceName + "test";
+    //deviceName + "test";
 
-    return deviceName;
+    return deviceName += "Test";
 }
 
 String CLAWBluetooth::getName() {
