@@ -1,10 +1,13 @@
 #include "CLAWOled.h"
 
-CLAWOled::CLAWOled() {
-    Adafruit_SSD1306(128, 64, &Wire, -1);
+CLAWOled::CLAWOled() : Adafruit_SSD1306(128, 64, &Wire, -1) {
+    
 }
 
 void CLAWOled::startDisplay() {
+
+    begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    setTextColor(WHITE);
 
     display();
     clearDisplay();

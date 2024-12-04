@@ -15,7 +15,7 @@ CLAWBluetooth::CLAWBluetooth()
 }
 
 void CLAWBluetooth::begin() {
-    pinMode(46, INPUT);
+    // pinMode(46, INPUT);
     // initialize Bluetooth device with name returned from setName();
     // BLE sometimes uses weird string types, sometimes you may need to pass [String].c_str()
     BLEDevice::init(setName().c_str());
@@ -77,16 +77,20 @@ BLECharacteristic *pCharacteristicRecive;
 String CLAWBluetooth::setName() {
     //implement hardware differentiation code here
     //Claw Radio - Stands / Pit
-    switch (digitalRead(46))
-    {
-    case HIGH:
-        deviceName + "Stands";
-        break;
+    // switch (digitalRead(46))
+    // {
+    // case HIGH:
+    //     deviceName + "Stands";
+    //     break;
     
-    case LOW:
-        deviceName + "Pit";
-        break;
-    }
+    // case LOW:
+    //     deviceName + "Pit";
+    //     break;
+
+    // default:
+    //     deviceName + "Test";
+    // }
+    deviceName + "test";
 
     return deviceName;
 }

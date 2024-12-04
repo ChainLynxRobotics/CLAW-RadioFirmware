@@ -17,10 +17,6 @@ void setup() {
   BT.begin();
   CSD.begin();
 
-  // begin oled with type of oled module (SSD1306), and its I2C address (0x3C)
-  oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  oled.setTextColor(WHITE);
-
   // reccomend starting oled display as the last thing in setup
   // has a 4 second display to show logo and team number because silly :3
   oled.startDisplay();
