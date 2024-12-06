@@ -34,6 +34,26 @@ void CLAWSD::begin() {
 
 bool CLAWSD::saveData(String data) {
 
+    byte dataArray[data.length()];
+
+    for(int i = 0; i < data.length(); i++) {
+        dataArray[i] = data.charAt(i);
+    }
+
+    ID = dataArray[0] << 24 + dataArray[1] << 16 + dataArray[2] << 8 + dataArray[3];
+    index = dataArray[4];
+    total = dataArray[5];
+    
+    for(int i = 0; i < data.length() - 6; i++) {
+        packet += data.charAt(i);
+    }
+
+    if (!fs.exists(ID)) {
+        createFile(ID);
+    }
+
+
+
     // return bool to confirm data was saved 
     return true;
 }
@@ -41,3 +61,9 @@ bool CLAWSD::saveData(String data) {
 int CLAWSD::getStatus() {
     return status;
 }
+
+void CLAWSD::createFile(uint32_t fileID) {
+    
+}
+
+void CLAWSD::appendData(byte _index, byte _total, String _packet)

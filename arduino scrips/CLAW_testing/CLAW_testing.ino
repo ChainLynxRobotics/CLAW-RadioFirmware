@@ -32,7 +32,6 @@ void loop() {
   if (BT.getDataAvailable()) {
     Serial.println("new data available");
     if(CSD.saveData(BT.getData())) {
-      Serial.println("data saved");
       BT.setDataAvailable(false);
     }
   }

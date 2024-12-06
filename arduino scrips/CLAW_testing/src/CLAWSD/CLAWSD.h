@@ -29,6 +29,11 @@ class CLAWSD {
 
     SPIClass spi = SPIClass(HSPI);
     int status = 0;
+    uint32_t ID;
+    byte index;
+    byte total;
+    String packet;
+    File file = fs.open("/")
 
     public:
     
@@ -37,4 +42,5 @@ class CLAWSD {
         void begin();
         bool saveData(String data);
         int getStatus();
+        void createFile(uint32_t fileID);
 };
