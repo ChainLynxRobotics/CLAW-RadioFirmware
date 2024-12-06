@@ -65,7 +65,6 @@ void CLAWBluetooth::begin() {
     BLEDevice::startAdvertising();
     Serial.println("Waiting a client connection to notify...");
     Serial.println(getName());
-    setStatus(1);
 }
 
 // Characteristic pointers
@@ -91,7 +90,6 @@ String CLAWBluetooth::setName() {
     // default:
     //     deviceName += "Test";
     // }
-    //deviceName + "test";
 
     return deviceName += "Test";
 }
@@ -117,6 +115,14 @@ String CLAWBluetooth::getData() {
     return pCharacteristicTransmit->getValue();
 }
 
+void CLAWBluetooth::setDataAvailable(bool state) {
+    newData = state;
+}
+
+bool CLAWBluetooth::getDataAvailable() {
+    return newData;
+}
+
 MyServerCallbacks::MyServerCallbacks(CLAWBluetooth* _BT) {
   BT = _BT;
 }
@@ -125,13 +131,21 @@ void MyServerCallbacks::onConnect(BLEServer* pServer) {
     BLEDevice::startAdvertising();
     Serial.println("device connected");
     BT->deviceConnected++;
-};
+
+    if (BT->deviceConnected > 0) {
+        BT->setStatus(1);
+    }
+}
 
 // keeping track of the amount of connected devices ^ v
 
 void MyServerCallbacks::onDisconnect(BLEServer* pServer) {
     Serial.println("device disconnected");
     BT->deviceConnected--;
+    
+    if (BT->deviceConnected <= 0) {
+        BT->setStatus(0);
+    }
 }
 
 CharacteristicChangeCallbacks::CharacteristicChangeCallbacks(CLAWBluetooth* _BT) {
@@ -150,6 +164,7 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
     // set TX to RX value, then notify TX has been changed
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
+    BT->setDataAvailable(true);
 
     // Debug messages
     // if (value.length() > 0) {
@@ -165,5 +180,4 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
 
     // Serial.println("*********");
     // }
-};
-
+}

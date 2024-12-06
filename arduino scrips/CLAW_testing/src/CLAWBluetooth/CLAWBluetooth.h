@@ -25,8 +25,11 @@ class CLAWBluetooth
         int getStatus();
         int getDevices();
         String getData();
+        void setDataAvailable(bool state);
+        bool getDataAvailable();
         
         int deviceConnected = 0;
+        bool newData;
         
         // object pointers are defined with an asterisk (*) by [type] *[name]
         // to access variables or call functions of object pointers, you need to use a pointer

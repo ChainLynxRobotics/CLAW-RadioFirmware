@@ -6,6 +6,8 @@ CLAWOled::CLAWOled() : Adafruit_SSD1306(128, 64, &Wire, -1) {
 
 void CLAWOled::startDisplay() {
 
+    Wire.begin(18, 17);
+
     begin(SSD1306_SWITCHCAPVCC, 0x3C);
     setTextColor(WHITE);
 
@@ -39,6 +41,8 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     print("Devices connected: ");
     println(devices);
     println();
+
+    // draw bitmaps by drawBitmap([x position], [y position], [bitmap image], [height], [width], WHITE);
     
     // display Bluetooth status 
     switch (BTStatus) {
@@ -90,6 +94,8 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
 
     display();
 }
+
+// if something for some reason goes wrong, draw an error at the specified coordinates 
 
 void CLAWOled::drawError(int x, int y) {
     drawBitmap(x, y, bmp_error, 16, 16, WHITE);

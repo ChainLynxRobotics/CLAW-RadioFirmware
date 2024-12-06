@@ -20,7 +20,7 @@ void setup() {
   // reccomend starting oled display as the last thing in setup
   // has a 4 second display to show logo and team number because silly :3
   oled.startDisplay();
-  Serial.println(BT.getName());
+  Serial.println("startup");
 }
 
 void loop() {
@@ -28,6 +28,14 @@ void loop() {
   // put your main code here, to run repeatedly:
   //Serial.println(BT.getDevices());
   oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), CSD.getStatus(), 0);
+
+  if (BT.getDataAvailable()) {
+    Serial.println("new data available");
+    if(CSD.saveData(BT.getData())) {
+      Serial.println("data saved");
+      BT.setDataAvailable(false);
+    }
+  }
 
   // refresh every 50 ms
   delay(50);

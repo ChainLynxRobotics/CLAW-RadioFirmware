@@ -9,27 +9,31 @@
 #include <SD.h>
 
 // using SDO (Serial Data Out) and SDI (Serial Data In) instead of previous SPI terms
-//  MISO and MOSI are outdated and have bad historical connotations
+// MISO and MOSI are outdated and have bad historical connotations
+
+// testing pins on esp32 dev module
 #define SCK 14
 #define SDI 12
 #define SDO 13
-#define CS 14
-// actual lilygo pins are CS 13, SDO 11, SCK 14, SDI 2
+#define CS 15
+
+// actual pin for lilygo module
+// #define SCK 14
+// #define SDI 2
+// #define SDO 11
+// #define CS 13
 
 class CLAWSD {
 
     private:
 
     SPIClass spi = SPIClass(HSPI);
-    int status = 1;
+    int status = 0;
 
     public:
-
-        //File currentFile;
-
+    
         CLAWSD();
 
-        // pass chip select pin on begin
         void begin();
         bool saveData(String data);
         int getStatus();
