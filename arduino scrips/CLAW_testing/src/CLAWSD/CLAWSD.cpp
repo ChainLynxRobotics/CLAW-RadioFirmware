@@ -28,30 +28,26 @@ void CLAWSD::begin() {
 
         status = 1;
     }
-
-
 }
 
 bool CLAWSD::saveData(String data) {
 
-    byte dataArray[data.length()];
+    uint32_t ID = (uint32_t)data.charAt(3) << 24 | (uint32_t)data.charAt(2) << 16 | (uint32_t)data.charAt(1) << 8 | (uint32_t)data.charAt(0);
+    uint8_t index = data.charAt(4);
+    uint8_t total = data.charAt(5);
 
-    for(int i = 0; i < data.length(); i++) {
-        dataArray[i] = data.charAt(i);
-    }
+    String packet = data.substring(6);
 
-    ID = dataArray[0] << 24 + dataArray[1] << 16 + dataArray[2] << 8 + dataArray[3];
-    index = dataArray[4];
-    total = dataArray[5];
-    
-    for(int i = 0; i < data.length() - 6; i++) {
-        packet += data.charAt(i);
-    }
+    Serial.println(ID);
+    Serial.println(index);
+    Serial.println(total);
 
-    if (!fs.exists(ID)) {
-        createFile(ID);
-    }
-
+    // if(!fs.exists(ID)) {
+    //     createFile(ID);
+    // } else {
+    //     fs.open(ID);
+    //     writeData(index, total, packet);
+    // }
 
 
     // return bool to confirm data was saved 
@@ -66,4 +62,6 @@ void CLAWSD::createFile(uint32_t fileID) {
     
 }
 
-void CLAWSD::appendData(byte _index, byte _total, String _packet)
+void CLAWSD::writeData(byte _index, byte _total, String _packet) {
+
+}

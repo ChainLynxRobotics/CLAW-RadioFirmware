@@ -158,13 +158,13 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
     String key = pCharacteristic->getUUID().toString();
     String value = pCharacteristic->getValue();
 
-    // print to serial for debugging
-    Serial.println("characteristic changed");
-
     // set TX to RX value, then notify TX has been changed
     BT->pCharacteristicTransmit->setValue(pCharacteristic->getValue());
     BT->pCharacteristicTransmit->notify();
     BT->setDataAvailable(true);
+
+    // print to serial for debugging
+    Serial.println("characteristic changed");
 
     // Debug messages
     // if (value.length() > 0) {

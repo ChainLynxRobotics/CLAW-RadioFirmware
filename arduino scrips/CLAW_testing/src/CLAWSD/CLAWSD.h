@@ -12,16 +12,16 @@
 // MISO and MOSI are outdated and have bad historical connotations
 
 // testing pins on esp32 dev module
-#define SCK 14
-#define SDI 12
-#define SDO 13
-#define CS 15
+// #define SCK 14
+// #define SDI 12
+// #define SDO 13
+// #define CS 15
 
 // actual pin for lilygo module
-// #define SCK 14
-// #define SDI 2
-// #define SDO 11
-// #define CS 13
+#define SCK 14
+#define SDI 2
+#define SDO 11
+#define CS 13
 
 class CLAWSD {
 
@@ -30,10 +30,7 @@ class CLAWSD {
     SPIClass spi = SPIClass(HSPI);
     int status = 0;
     uint32_t ID;
-    byte index;
-    byte total;
-    String packet;
-    File file = fs.open("/")
+    //File file = fs.open("/")
 
     public:
     
@@ -43,4 +40,5 @@ class CLAWSD {
         bool saveData(String data);
         int getStatus();
         void createFile(uint32_t fileID);
+        void writeData(byte _index, byte _total, String _packet);
 };

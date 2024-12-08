@@ -15,7 +15,7 @@ class CLAWOled: public Adafruit_SSD1306{
 
         CLAWOled();
         void startDisplay();
-        void updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus);
+        void updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus, int batPercent);
         void drawError(int x, int y);
 
     private:

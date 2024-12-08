@@ -27,7 +27,7 @@ void CLAWOled::startDisplay() {
 }
 
 // passing parameters from CLAWBT to display on oled screen
-void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus) {
+void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus, int batPercent) {
 
     // clear everything previously displayed and set cursor to 0,0
     clearDisplay();
@@ -41,6 +41,10 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     print("Devices connected: ");
     println(devices);
     println();
+
+    setCursor(106, 57);
+    print("%");
+    print(batPercent);
 
     // draw bitmaps by drawBitmap([x position], [y position], [bitmap image], [height], [width], WHITE);
     
