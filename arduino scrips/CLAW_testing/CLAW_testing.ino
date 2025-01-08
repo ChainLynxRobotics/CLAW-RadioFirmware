@@ -1,13 +1,15 @@
 #include "src/CLAWBluetooth/CLAWBluetooth.h"
 #include "src/CLAWBattery/CLAWBattery.h"
+#include "src/CLAWLoRa/CLAWLoRa.h"
 #include "src/CLAWOled/CLAWOled.h"
 #include "src/CLAWSD/CLAWSD.h"
 
 CLAWBluetooth BT;
 CLAWBattery bat;
+CLAWLoRa CLoRa(&BT);
 CLAWOled oled;
 CLAWSD CSD;
-// CLAWSD class is defined as CSD because there is an inter refrece to another class called "SD"
+// CLAWSD class is defined as CSD because there is an internal refrece to another class called "SD"
 
 void setup() {
   // put your setup code here, to run once:
@@ -15,13 +17,16 @@ void setup() {
   // serial for debugging
   Serial.begin(9600);
 
-  // begining bluetooth and SD card
+  // begining bluetooth, SD card, and battery 
   BT.begin();
   CSD.begin();
+  CLoRa.begin();
+  // pin 1 is internally connected to battery
+  // so we pass that as the pin to read voltage
   bat.begin(1);
 
   // reccomend starting oled display as the last thing in setup
-  // has a 4 second display to show logo and team number because silly :3
+  // has a 3 second display to show team number because silly :3
   oled.startDisplay();
 }
 

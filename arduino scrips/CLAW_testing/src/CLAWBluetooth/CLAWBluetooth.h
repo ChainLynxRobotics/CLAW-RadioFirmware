@@ -1,3 +1,6 @@
+#ifndef CLAWBluetooth_h
+#define CLAWBluetooth_h
+
 #include "Arduino.h"
 #include <BLEDevice.h>
 #include <BLEServer.h>
@@ -13,7 +16,7 @@ class CLAWBluetooth
         BLEServer* pServer;
         String setName();
         String deviceName = "CLAW Radio - ";
-        int status = 0; // 0 default
+        int status = 0; // 0 disconnected, 1 connected
         
     public:
 
@@ -70,3 +73,4 @@ class MyServerCallbacks: public BLEServerCallbacks
         void onDisconnect(BLEServer* pServer);
 };
 
+#endif

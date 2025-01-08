@@ -15,6 +15,7 @@ void CLAWOled::startDisplay() {
     clearDisplay();
     delay(10);
 
+    // displaying logo and team nunmber takes too much boot time :(
     // drawBitmap(32, 0, bmp_chainlynx_logo_small, 64, 64, WHITE);
     // display();
     // delay(3000);
@@ -42,9 +43,12 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     println(devices);
     println();
 
-    setCursor(106, 57);
+    // display battery percent in bottom right corner
+    // position and display of battery will probably change at some point
+    setCursor(65, 57);
     print("%");
     print(batPercent);
+
 
     // draw bitmaps by drawBitmap([x position], [y position], [bitmap image], [height], [width], WHITE);
     
@@ -94,6 +98,14 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
         default:
             drawError(33, 48);
             break;
+    }
+
+    // displaying battery level
+    drawBitmap(49, 48, bmp_battery, 16, 16, WHITE);
+    int batteryLevel = map(batPercent, 0, 99, 0, 13);
+
+    for (int i = 0; i <= batteryLevel; i++) {
+        drawBitmap(49, 48 - i, bmp_batt_level, 16, 16, WHITE);
     }
 
     display();

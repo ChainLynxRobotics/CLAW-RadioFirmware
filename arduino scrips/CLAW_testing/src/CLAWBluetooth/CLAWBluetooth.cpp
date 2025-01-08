@@ -116,10 +116,12 @@ String CLAWBluetooth::getData() {
 }
 
 void CLAWBluetooth::setDataAvailable(bool state) {
+    // external way to set data availability
     newData = state;
 }
 
 bool CLAWBluetooth::getDataAvailable() {
+    // publicly showing that new data is available to be saved/transmitted
     return newData;
 }
 
