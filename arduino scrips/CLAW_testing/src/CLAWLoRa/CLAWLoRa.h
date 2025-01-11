@@ -7,15 +7,15 @@ class CLAWLoRa {
 
     private:
 
-        int status = 0;
-        int frequency;
-
-        void setMode(bool mode);
+        static CLAWLoRa* instance;
+        static void rxCallback(int packageSize);
+        static void txDoneCallback();
 
         CLAWBluetooth *BT;
 
-        std::function<void()> txDoneCallback;
-        std::function<void(int packageSize)> rxCallback; 
+        int status = 0;
+        int frequency;
+        void setMode(bool mode);
 
     public:
 
