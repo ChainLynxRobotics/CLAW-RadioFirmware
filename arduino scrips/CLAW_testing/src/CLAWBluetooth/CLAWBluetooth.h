@@ -14,7 +14,6 @@ class CLAWBluetooth
     private:
         
         BLEServer* pServer;
-        String setName();
         String deviceName = "CLAW Radio - ";
         int status = 0; // 0 disconnected, 1 connected
         
@@ -24,6 +23,7 @@ class CLAWBluetooth
         void begin();
         
         String getName();
+        void setName(bool device);
         void setStatus(int newStatus);
         int getStatus();
         int getDevices();

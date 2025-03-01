@@ -4,11 +4,17 @@ CLAWOled::CLAWOled() : Adafruit_SSD1306(128, 64, &Wire, -1) {
     
 }
 
-void CLAWOled::startDisplay() {
+void CLAWOled::startDisplay(double _version) {
+
+    delay(10);
+
+    version = _version;
 
     Wire.begin(18, 17);
 
-    begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    if (!begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+        Serial.println("oled failed to start");
+    }
     setTextColor(WHITE);
 
     display();
@@ -42,6 +48,11 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     print("Devices connected: ");
     println(devices);
     println();
+
+    if (LoRaStatus == 0) {
+
+        print("Initializing LoRa...");
+    }
 
     // display battery percent in bottom right corner
     // position and display of battery will probably change at some point
@@ -107,6 +118,10 @@ void CLAWOled::updateDisplay(String name, int devices, int BTStatus, int SDStatu
     for (int i = 0; i <= batteryLevel; i++) {
         drawBitmap(49, 48 - i, bmp_batt_level, 16, 16, WHITE);
     }
+
+    setCursor(90, 57);
+    print("v");
+    print(version);
 
     display();
 }

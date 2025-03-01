@@ -6,17 +6,16 @@ CLAWBattery::CLAWBattery() {
     // then does some math to get the average voltage and converts that to a percent
 }
 
-void CLAWBattery::begin(int _batteryPin) {
+void CLAWBattery::begin() {
     // setting battery pin to input so we can read it
-    batteryPin = _batteryPin;
-    pinMode(batteryPin, INPUT);
+    pinMode(1, INPUT);
 }
 
 double CLAWBattery::getVoltage() {
     uint32_t Vbatt = 0;
     // finding the average voltage from 16 samples
     for(int i = 0; i < 16; i++) {
-        Vbatt = Vbatt + analogReadMilliVolts(batteryPin); // ADC with correction   
+        Vbatt = Vbatt + analogReadMilliVolts(1); // ADC with correction   
     }
     // dividing by the sample size, and 1000 to convert milivolts to volts
     float Vbattf = 2 * Vbatt / 16 / 1000.0;     // attenuation ratio 1/2, mV --> V

@@ -4,43 +4,76 @@
 #include "src/CLAWOled/CLAWOled.h"
 #include "src/CLAWSD/CLAWSD.h"
 
+#define VERSION 1.00
+
 CLAWBluetooth BT;
 CLAWBattery bat;
-CLAWLoRa CLoRa(&BT);
+CLAWLoRa CLoRa;
 CLAWOled oled;
 CLAWSD CSD;
+
+bool deviceLocation;
 // CLAWSD class is defined as CSD because there is an internal refrece to another class called "SD"
 
 void setup() {
+
+  Serial.begin(9600);
+  //Serial.println("device on");
+
   // put your setup code here, to run once:
 
-  // serial for debugging
-  Serial.begin(9600);
+  // reads pin 46, which is either connected to 3.3v or ground
+  // when connected to ground, it is set as the pit server
+  // and connected to 3.3v, the stands server
+  // both modules use this same script, but we're able to
+  // differentiate them through hardware
+
+  pinMode(46, INPUT);
+  switch (digitalRead(46)) {
+    
+    case HIGH: 
+      deviceLocation = true;
+      break;
+
+    case LOW:
+      deviceLocation = false;
+      break;
+
+    default:
+      break;
+  }
+
+  BT.setName(deviceLocation);
 
   // begining bluetooth, SD card, and battery 
+  // SD library doesnt work
   BT.begin();
   CSD.begin();
-  CLoRa.begin();
-  // pin 1 is internally connected to battery
-  // so we pass that as the pin to read voltage
-  bat.begin(1);
+  bat.begin();
 
-  // reccomend starting oled display as the last thing in setup
-  // has a 3 second display to show team number because silly :3
-  oled.startDisplay();
+  oled.startDisplay(VERSION);
+
+  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), CSD.getStatus(), 0, bat.getPercent(bat.getVoltage()));
+
+
+  // LoRa takes a minute to set up, and i couldnt figure out how to multithreadd
+  CLoRa.begin();
+
 }
 
 void loop() {
   
-  // put your main code here, to run repeatedly:
-  //Serial.println(BT.getDevices());
-  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), CSD.getStatus(), 0, bat.getPercent(bat.getVoltage()));
+  // updating oled display every loop
+  // pretty inneficient but it works fine for now
+
+  oled.updateDisplay(BT.getName(), BT.getDevices(), BT.getStatus(), CSD.getStatus(), CLoRa.getStatus(), bat.getPercent(bat.getVoltage()));
 
   if (BT.getDataAvailable()) {
+
     Serial.println("new data available");
-    if(CSD.saveData(BT.getData())) {
-      BT.setDataAvailable(false);
-    }
+    CLoRa.sendPacket(BT.getData());
+    BT.setDataAvailable(false);
+    
   }
 
   // refresh every 50 ms

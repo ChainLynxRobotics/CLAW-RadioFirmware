@@ -18,7 +18,7 @@ void CLAWBluetooth::begin() {
     // pinMode(46, INPUT);
     // initialize Bluetooth device with name returned from setName();
     // BLE sometimes uses weird string types, sometimes you may need to pass [String].c_str()
-    BLEDevice::init(setName().c_str());
+    BLEDevice::init(getName().c_str());
 
     // Create the BLE Server
     pServer = BLEDevice::createServer();
@@ -63,7 +63,7 @@ void CLAWBluetooth::begin() {
     pAdvertising->setScanResponse(false);
     pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
     BLEDevice::startAdvertising();
-    Serial.println("Waiting a client connection to notify...");
+    //Serial.println("Waiting a client connection to notify...");
     Serial.println(getName());
 }
 
@@ -74,24 +74,22 @@ BLECharacteristic *pCharacteristicRecive;
 // setName is called on start and checks if pin [probably gpio 46] is connected to 3.3v or ground via 1k resistor
 //       3.3v - Stands
 //       GND - Pit
-String CLAWBluetooth::setName() {
+void CLAWBluetooth::setName(bool device) {
     //implement hardware differentiation code here
     //Claw Radio - Stands / Pit
-    // switch (digitalRead(46))
-    // {
-    // case HIGH:
-    //     deviceName += "Stands";
-    //     break;
+    switch (device)
+    {
+    case true:
+        deviceName += "Stands";
+        break;
     
-    // case LOW:
-    //     deviceName += "Pit";
-    //     break;
+    case false:
+        deviceName += "Pit";
+        break;
 
-    // default:
-    //     deviceName += "Test";
-    // }
-
-    return deviceName += "Test";
+    default:
+        deviceName += "Test";
+    }
 }
 
 String CLAWBluetooth::getName() {
@@ -158,6 +156,13 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
 
     // Get the key value pair, the key is one of the characteristic UUIDs defined earlier
     String key = pCharacteristic->getUUID().toString();
+
+    // we want to make sure this function is triggered when RX is changed
+    // because i think it creates an infinate loop?
+    if (key.equals(BT->pCharacteristicTransmit->getUUID().toString())) {
+        return;
+    }
+
     String value = pCharacteristic->getValue();
 
     // set TX to RX value, then notify TX has been changed
@@ -167,6 +172,8 @@ void CharacteristicChangeCallbacks::onWrite(BLECharacteristic *pCharacteristic) 
 
     // print to serial for debugging
     Serial.println("characteristic changed");
+    Serial.println(key);
+    Serial.println(value);
 
     // Debug messages
     // if (value.length() > 0) {

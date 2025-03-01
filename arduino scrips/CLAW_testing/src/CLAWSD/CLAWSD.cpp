@@ -11,7 +11,7 @@ void CLAWSD::begin() {
 
     // make sure SD card reader is present
     if (!SD.begin(CS, spi, 80000000)) {
-        Serial.println("Card Mount Failed");
+        //Serial.println("Card Mount Failed");
         status = 0;
         return;
 

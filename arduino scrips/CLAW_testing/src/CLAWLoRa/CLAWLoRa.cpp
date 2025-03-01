@@ -1,73 +1,102 @@
 #include "CLAWLoRa.h"
 
-CLAWLoRa *CLAWLoRa::instance = nullptr;
-
-CLAWLoRa::CLAWLoRa(CLAWBluetooth *BT) {
-    this->BT = BT;
-    instance = this;
+CLAWLoRa::CLAWLoRa() {
 }
 
 void CLAWLoRa::begin() {
-    LoRa.setPins(7, 8, 33);
 
-    // setting a sync word so LoRa doesnt messages from other LoRa modules
-    LoRa.setSyncWord(0xE5);
+	setStatus(0);
 
-    // frequency we're using for LoRa
-    // 915 MHz
-    LoRa.begin(915E6);
+	hwConfig.CHIP_TYPE = SX1262_CHIP;		  // Example uses an eByte E22 module with an SX1262
+	hwConfig.PIN_LORA_RESET = RST; // LORA RESET
+	hwConfig.PIN_LORA_NSS = CS;	 // LORA SPI CS
+	hwConfig.PIN_LORA_SCLK = SCK;   // LORA SPI CLK
+	hwConfig.PIN_LORA_MISO = SDI;   // LORA SPI MISO
+	hwConfig.PIN_LORA_DIO_1 = DIO; // LORA DIO_1
+	// hwConfig.PIN_LORA_BUSY = PIN_LORA_BUSY;   // LORA SPI BUSY
+	hwConfig.PIN_LORA_MOSI = SDO;   // LORA SPI MOSI
+	hwConfig.RADIO_TXEN = -1;		  // LORA ANTENNA TX ENABLE
+	hwConfig.RADIO_RXEN = -1;		  // LORA ANTENNA RX ENABLE
 
-    // setting up callback functions to be called when something 
-    // is received and when its done transmitting
-    LoRa.onReceive(rxCallback);
-    LoRa.onTxDone(txDoneCallback);
-    // TX = transmit
-    // RX = receive
+	Serial.println("set hardware config");
+
+    lora_hardware_init(hwConfig);
+
+	Serial.println("initialized hardware config");
+
+    RadioEvents.TxDone = OnTxDone;
+	RadioEvents.RxDone = OnRxDone;
+
+	Serial.println("set TX/RX callbacks");
+	// RadioEvents.TxTimeout = OnTxTimeout;
+	// RadioEvents.RxTimeout = OnRxTimeout;
+	// RadioEvents.RxError = OnRxError;
+	// RadioEvents.CadDone = OnCadDone;
+
+	Radio.Init(&RadioEvents);
+
+	// Set Radio channel
+	Radio.SetChannel(RF_FREQUENCY);
+
+
+	Radio.SetCustomSyncWord(8248);
+
+
+	// Set Radio TX configuration
+	Radio.SetTxConfig(MODEM_LORA, TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
+					  LORA_SPREADING_FACTOR, LORA_CODINGRATE,
+					  LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
+					  true, 0, 0, LORA_IQ_INVERSION_ON, TX_TIMEOUT_VALUE);
+
+
+	// Set Radio RX configuration
+	Radio.SetRxConfig(MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
+					  LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
+					  LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
+					  0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+
+
+    Radio.Rx(RX_TIMEOUT_VALUE);
+
+	delay(100);
+	yield();
+
+	setStatus(1);
 }
 
 void CLAWLoRa::setMode(bool mode) {
 
-    // true = transmit mode
-    // false = recieve mode
-    switch (mode) {
-
-        case true:
-            LoRa.idle();                          // set standby mode
-            LoRa.enableInvertIQ(); 
-            break;
-        
-        case false:
-            LoRa.disableInvertIQ();               // normal mode
-            LoRa.receive(); 
-            break;
-    }
 }
 
-void CLAWLoRa::sendPacket(String packet) {
-    setMode(true);
-    LoRa.beginPacket();
-    LoRa.print(packet);
-    LoRa.endPacket(true);
+void CLAWLoRa::sendPacket(String _packet) {
+
+	//Serial.println(_packet.charAt(0));
+
+	for (int i = 0; i < _packet.length(); i++) {
+		TxdBuffer[i] = _packet.charAt(i);
+		Serial.print(TxdBuffer[i]);
+		Serial.print(", ");
+	}
+	
+	Radio.Send(TxdBuffer, BufferSize);
+
 }
 
 int CLAWLoRa::getStatus() {
+    return status;
+}
+
+void CLAWLoRa::setStatus(int _status) {
+	status = _status;
+}
+
+void CLAWLoRa::OnTxDone() {
 
 }
 
-// Static functions
+void CLAWLoRa::OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
-void CLAWLoRa::rxCallback(int packageSize) {
-    String message = "";
-
-    while (LoRa.available()) {
-        message += (char)LoRa.read();
-    }
-
-    Serial.print("Gateway Receive: ");
-    Serial.println(message);
+	for (int i = 0; i < size; i++) {
+		Serial.println(payload[i]);
+	}
 }
-
-void CLAWLoRa::txDoneCallback() {
-    instance->setMode(false);
-    Serial.println("done transmitting");
-};

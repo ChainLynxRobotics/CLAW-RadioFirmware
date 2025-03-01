@@ -14,11 +14,13 @@ class CLAWOled: public Adafruit_SSD1306{
     public:
 
         CLAWOled();
-        void startDisplay();
+        void startDisplay(double _version);
         void updateDisplay(String name, int devices, int BTStatus, int SDStatus, int LoRaStatus, int batPercent);
         void drawError(int x, int y);
 
     private:
+
+        double version;
 
         // 'bluetooth-connected', 16x16px
         const unsigned char bmp_bluetooth_connected [32] PROGMEM = {

@@ -4,12 +4,10 @@ class CLAWBattery {
 
     private:
 
-        int batteryPin;
-
     public:
 
         CLAWBattery();
-        void begin(int _batteryPin);
+        void begin();
         // seperate function for getting voltage vs getting percentage
         // because idk, we might need voltage for some reason
         double getVoltage();
